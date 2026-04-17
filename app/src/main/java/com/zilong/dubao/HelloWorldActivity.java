@@ -1,9 +1,10 @@
 package com.zilong.dubao;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 public class HelloWorldActivity extends AppCompatActivity {
     @Override
@@ -15,8 +16,9 @@ public class HelloWorldActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 点击事件
-                ImageView imageView =findViewById(R.id.img);
-                imageView.setImageResource(R.drawable.dubao2);
+                Intent intent =new Intent(HelloWorldActivity.this,MainActivity.class);
+                startActivity(intent);
+
             }
         });
 
