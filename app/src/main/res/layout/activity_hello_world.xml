@@ -3,13 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <Button
-        android:id="@+id/btn_submit"
-        android:layout_margin="5dp"
+    <TextView
+        android:id="@+id/fish_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="打开MainActivity"/>
-
+        android:textSize="26dp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/fish_num"
+        android:layout_width="match_parent"
+        android:textSize="26dp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/fish_price"
+        android:layout_width="match_parent"
+        android:textSize="26dp"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
