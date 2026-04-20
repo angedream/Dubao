@@ -13,10 +13,19 @@ public class HelloWorldActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello_world);
+
         Intent intent=getIntent();
-        String fish_name=intent.getStringExtra("fish_nam1e");
-        int fish_num=intent.getIntExtra("fish_num",0);
-        double fish_price=intent.getDoubleExtra("fish_price",0.0);
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) {
+            return;
+        }
+        String[] fishs = bundle.getStringArray("fish");
+        int fish_num = bundle.getInt("fish_num");
+        double fish_price=bundle.getDouble("fish_price");
+        String fish_name="";
+        for (int i = 0; i < fishs.length; i++) {
+            fish_name+=fishs[i];
+        }
         TextView textViewName=findViewById(R.id.fish_name);
         textViewName.setText("名称:"+(fish_name==null?"未知":fish_name));
         TextView textViewNum=findViewById(R.id.fish_num);

@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -20,9 +22,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, HelloWorldActivity.class);
-                intent.putExtra("fish_name", "鲫鱼");
-                intent.putExtra("fish_num", 125);
-                intent.putExtra("fish_price", 19.5);
+                Bundle bundle=new Bundle();
+                bundle.putStringArray("fish",new String[]{"鲫鱼","草鱼","鲤鱼"});
+                bundle.putInt("fish_num",111);
+                bundle.putDouble("fish_price",9.9);
+                intent.putExtras(bundle);
                 startActivity(intent);
 
             }
