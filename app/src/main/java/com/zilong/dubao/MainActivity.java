@@ -17,7 +17,8 @@ public class MainActivity extends AppCompatActivity {
         Button startbtn=findViewById(R.id.startbtn);
         startbtn.setOnClickListener(v->{
             Intent intent = new Intent(this, MyService.class);
-            startService(intent);
+            startForegroundService(intent);
+
         });
         Button stopbtn=findViewById(R.id.stopbtn);
         stopbtn.setOnClickListener(v->{
