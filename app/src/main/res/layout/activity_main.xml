@@ -4,9 +4,14 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical">
-<Button
-    android:id="@+id/start"
-    android:text="启动"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/startbtn"
+        android:text="启动服务"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/stopbtn"
+        android:text="关闭服务"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
