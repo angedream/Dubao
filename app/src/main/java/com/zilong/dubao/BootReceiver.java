@@ -3,6 +3,7 @@ package com.zilong.dubao;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -12,5 +13,6 @@ public class BootReceiver extends BroadcastReceiver {
             Intent i = new Intent(context, MyService.class);
             context.startForegroundService(i);
         }
+
     }
 }
