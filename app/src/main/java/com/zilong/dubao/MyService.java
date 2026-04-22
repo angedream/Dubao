@@ -27,7 +27,6 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this,"后台服务onStartCommand",Toast.LENGTH_SHORT).show();
-        startForeground(10001, createNotification());
         return super.onStartCommand(intent, flags, startId);
 
     }
@@ -48,31 +47,27 @@ public class MyService extends Service {
 
 
     private void createNotificationChannel() {
-        // Android 8.0+ 需要创建通知渠道
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "DUBAO",
-                    "嘟宝安心守护孩子安全",
-                    NotificationManager.IMPORTANCE_LOW
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-    }
-    private Notification createNotification() {
-        // 点击通知返回应用
+        NotificationChannel channel = new NotificationChannel(
+                "DUBAO",
+                "嘟宝安心守护孩子安全",
+                NotificationManager.IMPORTANCE_LOW
+        );
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(channel);
+
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        return new NotificationCompat.Builder(this, "DUBAO")
+        Notification notification= new NotificationCompat.Builder(this, "DUBAO")
                 .setContentTitle("嘟宝")
                 .setContentText("嘟宝安心守护孩子安全...")
                 .setSmallIcon(android.R.drawable.ic_menu_info_details)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)  // 不可滑动删除
                 .build();
+        startForeground(10001, notification);
     }
 }
