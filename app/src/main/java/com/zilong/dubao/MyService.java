@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 
 public class MyService extends Service {
+    MyMqttClient myMqttClient;
     public MyService() {
     }
 
@@ -19,14 +20,14 @@ public class MyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this,"后台服务onCreate",Toast.LENGTH_SHORT).show();
         createNotificationChannel();
+        myMqttClient=new MyMqttClient();
+        myMqttClient.connect();
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this,"后台服务onStartCommand",Toast.LENGTH_SHORT).show();
         return super.onStartCommand(intent, flags, startId);
 
     }
@@ -34,8 +35,7 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
 
-        Toast.makeText(this,"后台服务onDestroy",Toast.LENGTH_SHORT).show();
-
+        myMqttClient.colse();
         super.onDestroy();
     }
 
