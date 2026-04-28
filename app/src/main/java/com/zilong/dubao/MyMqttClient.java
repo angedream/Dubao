@@ -25,9 +25,9 @@ public class MyMqttClient {
         mWorkHandler = new Handler(handlerThread.getLooper());
     }
 
-    public void connect() {
+    public void connect(String uuid) {
         mWorkHandler.post(()->{
-            _connect();
+            _connect(uuid);
 
         });
 
@@ -64,11 +64,10 @@ public class MyMqttClient {
         }
     };
 
-    protected void _connect(){
+    protected void _connect(String uuid){
         try {
             String url= "tcp://"+MyConfig.mqttip+":"+MyConfig.mqttport;
-            String dubaoID="0001";
-            Log.d("mqtt",url);
+            String dubaoID=uuid;
             client=new MqttClient(url, "dubao_server"+dubaoID, new MemoryPersistence());
             connOpts=new MqttConnectOptions();
             connOpts.setCleanSession(true);// 重连接是否清理会话
