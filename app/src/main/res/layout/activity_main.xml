@@ -4,8 +4,14 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical">
+    <Button
+        android:id="@+id/sendmsg"
+        android:text="发送通知栏消息"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"/>
 
     <ImageView
+        android:visibility="invisible"
         android:id="@+id/qrCode"
         android:layout_width="300dp"
         android:layout_height="300dp"

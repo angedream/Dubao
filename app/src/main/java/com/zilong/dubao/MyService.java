@@ -23,8 +23,8 @@ public class MyService extends Service {
         createNotificationChannel();
         uuid u=new uuid();
         String uuid= u.getuuid(this);
-        myMqttClient=new MyMqttClient();
-        myMqttClient.connect(uuid);
+        myMqttClient=new MyMqttClient(uuid);
+        myMqttClient.connect();
 
     }
 
