@@ -19,15 +19,17 @@ public class MyMqttClient {
     private Handler mWorkHandler;
     private MqttClient client;
     private MqttConnectOptions connOpts;
-    MyMqttClient(){
+    private String uuid;
+    MyMqttClient(String uuid){
         HandlerThread handlerThread = new HandlerThread("worker");
         handlerThread.start();
         mWorkHandler = new Handler(handlerThread.getLooper());
+        this.uuid=uuid;
     }
 
-    public void connect(String uuid) {
+    public void connect() {
         mWorkHandler.post(()->{
-            _connect(uuid);
+            _connect();
 
         });
 
@@ -37,7 +39,7 @@ public class MyMqttClient {
         public void connectComplete(boolean reconnect, String serverURI) {
             Log.d("mqtt","connectComplete");
             try {
-                client.subscribe("/duma/#");
+                client.subscribe("/dubao/"+uuid);
             } catch (MqttException e) {
                 e.printStackTrace();
             }
@@ -64,7 +66,7 @@ public class MyMqttClient {
         }
     };
 
-    protected void _connect(String uuid){
+    protected void _connect(){
         try {
             String url= "tcp://"+MyConfig.mqttip+":"+MyConfig.mqttport;
             String dubaoID=uuid;
