@@ -12,8 +12,9 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        String name=getIntent().getStringExtra("name");
-        TextView id=findViewById(R.id.name);
-        id.setText(name);
+        String dumaName=getIntent().getStringExtra("dumaName");
+        String dumaId=getIntent().getStringExtra("dumaId");
+        ((TextView)findViewById(R.id.name)).setText(dumaName);
+        ((TextView)findViewById(R.id.dumaId)).setText(dumaId);
     }
 }

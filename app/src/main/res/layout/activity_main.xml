@@ -4,31 +4,8 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/code"
-        android:text="未有数据"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/dumaName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/dumaId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/dubaoId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/sendmsg"
-        android:text="解析"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-
     <ImageView
-        android:visibility="invisible"
+        android:visibility="visible"
         android:id="@+id/qrCode"
         android:layout_width="300dp"
         android:layout_height="300dp"
