@@ -7,10 +7,10 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 public class NotificationMsg {
     private String channelID="DUBAO";
-    private String channelName="嘟宝安心守护孩子安全";
+    private String channelName="嘟宝安心守护";
     private Context context;
     private NotificationManager manager=null;
-    private  int id=1000;
+    static int id=0;
 
     NotificationMsg(Context context){
         this.context=context;

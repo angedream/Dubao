@@ -5,14 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
 public class MyService extends Service {
     MyMqttClient myMqttClient;
+    static NotificationMsg notificationMsg;
     public MyService() {
     }
 
@@ -23,7 +22,8 @@ public class MyService extends Service {
         createNotificationChannel();
         uuid u=new uuid();
         String uuid= u.getuuid(this);
-        myMqttClient=new MyMqttClient(uuid);
+        notificationMsg=new NotificationMsg(this);
+        myMqttClient=new MyMqttClient(uuid,this);
         myMqttClient.connect();
 
     }
@@ -51,7 +51,7 @@ public class MyService extends Service {
     private void createNotificationChannel() {
         NotificationChannel channel = new NotificationChannel(
                 "DUBAO",
-                "嘟宝安心守护孩子安全",
+                "嘟宝安心守护",
                 NotificationManager.IMPORTANCE_LOW
         );
         NotificationManager manager = getSystemService(NotificationManager.class);

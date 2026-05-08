@@ -1,9 +1,12 @@
 package com.zilong.dubao;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -20,11 +23,39 @@ public class MyMqttClient {
     private MqttClient client;
     private MqttConnectOptions connOpts;
     private String uuid;
-    MyMqttClient(String uuid){
+    private  Context context;
+    private class Msg{
+        String code;
+        String dumaName;
+        String dumaId;
+        String dubaoId;
+    }
+
+    private void HandleMsg(String json){
+//        String json="{\"code\":\"bind\",\"dumaName\":\"嘟妈\",\"dumaId\":\"f1122aeb-f2b0-400d-9919-eddd2eaebaa2\",\"dubaoId\":\"cfb20ccc-8c53-4434-85bb-a171c3ca7c0c\"}";
+        Gson gson = new Gson();
+        Msg msg = gson.fromJson(json, Msg.class);
+        if (msg.dubaoId.equals(uuid)){
+            Log.d("mqtt",msg.dumaId);
+            Log.d("mqtt",msg.dumaName);
+            Intent intent = new Intent(context, MessageActivity.class);
+            intent.putExtra("dumaName",msg.dumaName);
+            intent.putExtra("dumaId",msg.dumaId);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            MyService.notificationMsg.sendNotification(msg.dumaName,msg.dumaId,intent);
+
+        }
+
+    }
+
+
+
+    MyMqttClient(String uuid, Context context){
         HandlerThread handlerThread = new HandlerThread("worker");
         handlerThread.start();
         mWorkHandler = new Handler(handlerThread.getLooper());
         this.uuid=uuid;
+        this.context=context;
         Log.d("mqtt",uuid);
     }
 
@@ -57,8 +88,7 @@ public class MyMqttClient {
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
             String s=new String(message.getPayload());
-            Log.d("mqtt","主题是:"+topic);
-            Log.d("mqtt","内容是::"+s);
+            HandleMsg(s);
         }
 
         @Override
