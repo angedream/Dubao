@@ -21,7 +21,7 @@ public class MyService extends Service {
         super.onCreate();
         createNotificationChannel();
         uuid u=new uuid();
-        String uuid= u.getuuid(this);
+        String uuid= u.getuuid();
         notificationMsg=new NotificationMsg(this);
         myMqttClient=new MyMqttClient(uuid,this);
         myMqttClient.connect();
