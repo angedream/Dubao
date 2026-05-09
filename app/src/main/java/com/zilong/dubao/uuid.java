@@ -1,11 +1,8 @@
 package com.zilong.dubao;
 
 import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
 import java.util.UUID;
 
 public class uuid {
@@ -13,9 +10,9 @@ public class uuid {
         String s="";
         s=UUID.randomUUID().toString();
         return s;
-
     }
-    public String getuuid(Context context){
+    public String getuuid(){
+        Context context=app.getContext();
         SharedPreferences  preferences=context.getSharedPreferences("uuid",MODE_PRIVATE);
         String uuid= preferences.getString("id","");
         if (uuid.equals("")){
