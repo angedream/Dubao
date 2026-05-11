@@ -4,8 +4,24 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical">
+    <Button
+        android:id="@+id/createDB"
+        android:text="创建"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/insertDB"
+        android:text="插入数据"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/queryDB"
+        android:text="查询数据"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <ImageView
-        android:visibility="visible"
+        android:visibility="invisible"
         android:id="@+id/qrCode"
         android:layout_width="300dp"
         android:layout_height="300dp"
