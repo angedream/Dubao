@@ -5,18 +5,13 @@
     android:gravity="center_vertical"
     android:orientation="vertical">
     <Button
-        android:id="@+id/createDB"
-        android:text="创建数据库"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <Button
         android:id="@+id/insertDB"
-        android:text="插入数据"
+        android:text="插入多数据"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button
-        android:id="@+id/updateDB"
-        android:text="更新数据"
+        android:id="@+id/rollupDB"
+        android:text="回滚数据"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button

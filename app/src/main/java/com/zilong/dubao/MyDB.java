@@ -29,23 +29,12 @@ public class MyDB extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db =getWritableDatabase();
             db.execSQL(sql);
+            db.close();
         }catch (SQLException e){
             e.printStackTrace();
 
         }
         return  false;
-
-    }
-    public Cursor rawQuery(String sql){
-        try {
-            SQLiteDatabase db =getWritableDatabase();
-            Cursor cursor = db.rawQuery(sql, null);
-            return cursor;
-        }catch (SQLException e){
-            e.printStackTrace();
-
-        }
-        return null;
 
     }
 }

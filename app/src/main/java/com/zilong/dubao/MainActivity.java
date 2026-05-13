@@ -37,31 +37,61 @@ public class MainActivity extends AppCompatActivity {
         qrCodeImageView.setImageBitmap(qrBitmap);
     }
     private void initBtn(){
-        Button createDBBtn=findViewById(R.id.createDB);
-        createDBBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDB.getWritableDatabase();
-
-            }
-        });
         Button insertBtn=findViewById(R.id.insertDB);
         insertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sql="";
-                sql=String.format("INSERT INTO duma( \"dumaName\", \"dumaId\", \"bindDateTime\") VALUES ( '%s', '%s', '%d');","嘟妈","f1122aeb-f2b0-400d-9919-eddd2eaebaa2" ,System.currentTimeMillis());
-                myDB.execSQL(sql);
+
+                SQLiteDatabase db = myDB.getWritableDatabase();
+                db.beginTransaction();
+                try {
+                    // 执行多个数据库操作
+                    for (int i = 0; i < 3; i++) {
+                        String sql="";
+                        sql=String.format("INSERT INTO duma( \"dumaName\", \"dumaId\", \"bindDateTime\") VALUES ( '%s', '%s', '%d');","嘟妈"+i,"f1122aeb-f2b0-400d-9919-eddd2eaebaa2" ,System.currentTimeMillis());
+                        Log.d("mqtt",sql);
+                        db.execSQL(sql);
+                    }
+                    db.setTransactionSuccessful();
+
+                } catch (Exception e) {
+                    // 发生异常，自动回滚
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this,"发生异常，自动回滚",Toast.LENGTH_SHORT).show();
+                }finally {
+                    db.endTransaction();
+                    db.close();
+                }
 
             }
         });
-        Button updateBtn=findViewById(R.id.updateDB);
-        updateBtn.setOnClickListener(new View.OnClickListener() {
+        Button rollupBtn=findViewById(R.id.rollupDB);
+        rollupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String sql="";
-                sql=String.format("UPDATE duma set dumaName=\"%s\" WHERE dumaId=\"%s\"","嘟妈2","f1122aeb-f2b0-400d-9919-eddd2eaebaa2" );
-                myDB.execSQL(sql);
+                SQLiteDatabase db = myDB.getWritableDatabase();
+                db.beginTransaction();
+                try {
+                    // 执行多个数据库操作
+                    for (int i = 0; i < 3; i++) {
+                        String sql="";
+                        sql=String.format("INSERT INTO duma( \"dumaName\", \"dumaId\", \"bindDateTime\") VALUES ( '%s', '%s', '%d');","嘟妈"+i,"f1122aeb-f2b0-400d-9919-eddd2eaebaa2" ,System.currentTimeMillis());
+                        db.execSQL(sql);
+                        if (i==1){
+                            throw  new Exception("失败");
+                        }
+                    }
+                    db.setTransactionSuccessful();
+
+
+                } catch (Exception e) {
+                    // 发生异常，自动回滚
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this,"发生异常，自动回滚",Toast.LENGTH_SHORT).show();
+                }finally {
+                    db.endTransaction();
+                    db.close();
+                }
 
             }
         });
@@ -70,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
         queryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor cursor = myDB.rawQuery("SELECT * FROM duma");
+                SQLiteDatabase db =myDB.getWritableDatabase();
+                Cursor cursor = db.rawQuery("SELECT * FROM duma",null);
                 if (cursor!=null&&cursor.moveToFirst()){
                     do{
                         @SuppressLint("Range") String dumaName=cursor.getString(cursor.getColumnIndex("dumaName"));
@@ -80,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }while (cursor.moveToNext());
                     cursor.close();
+                    db.close();
 
                 }
 
