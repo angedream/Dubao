@@ -7,6 +7,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -19,6 +20,8 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.nio.charset.StandardCharsets;
 
 public class MyMqttClient {
+    MyWebRtc myWebRtc;
+
     private Handler mWorkHandler;
     private MqttClient client;
     private MqttConnectOptions connOpts;
@@ -30,25 +33,50 @@ public class MyMqttClient {
             this.dumaId=dumaId;
             this.dubaoId=dubaoId;
         }
-        String code;
-        String dumaName;
-        String dumaId;
-        String dubaoId;
+        Msg(){}
+        String code="";
+        String dumaName="";
+        String dumaId="";
+        String dubaoId="";
+        String data="";
+    }
+    private void print(String s){
+        Log.d("mqtt",s);
     }
 
     private void HandleMsg(String json){
 //        String json="{\"code\":\"bind\",\"dumaName\":\"嘟妈\",\"dumaId\":\"f1122aeb-f2b0-400d-9919-eddd2eaebaa2\",\"dubaoId\":\"cfb20ccc-8c53-4434-85bb-a171c3ca7c0c\"}";
-        Gson gson = new Gson();
-        Msg msg = gson.fromJson(json, Msg.class);
-        if (msg.dubaoId.equals(uuid)){
-            Intent intent = new Intent(app.getContext(), MessageActivity.class);
-            intent.putExtra("dumaName",msg.dumaName);
-            intent.putExtra("dumaId",msg.dumaId);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            NotificationMsg notificationMsg=new NotificationMsg();
-            notificationMsg.sendNotification(msg.dumaName+"请求绑定",msg.dumaId,intent);
 
+        try {
+            print(json);
+            Gson gson = new Gson();
+            Msg msg = gson.fromJson(json, Msg.class);
+            if (msg.dubaoId.equals(uuid)&&msg.code.equals("bind")){
+                Intent intent = new Intent(app.getContext(), MessageActivity.class);
+                intent.putExtra("dumaName",msg.dumaName);
+                intent.putExtra("dumaId",msg.dumaId);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                NotificationMsg notificationMsg=new NotificationMsg();
+                notificationMsg.sendNotification(msg.dumaName+"请求绑定",msg.dumaId,intent);
+                return;
+
+            }
+            switch (msg.code){
+            case "offer":
+                myWebRtc.createPeerConnection(msg.data);
+                break;
+                case "ice":
+                    myWebRtc.onRemoteIceCandidateReceived(msg.data);
+
+                    break;
+            default:break;
+            }
+
+        }catch (JsonSyntaxException e){
+            e.printStackTrace();
         }
+
+
 
     }
 
@@ -75,6 +103,8 @@ public class MyMqttClient {
             Log.d("mqtt","connectComplete");
             try {
                 client.subscribe("/dubao/"+uuid);
+                myWebRtc=new MyWebRtc();
+
             } catch (MqttException e) {
                 e.printStackTrace();
             }
@@ -84,6 +114,7 @@ public class MyMqttClient {
 
         @Override
         public void connectionLost(Throwable cause) {
+            cause.printStackTrace();
             Log.d("mqtt","connectionLost");
 
         }

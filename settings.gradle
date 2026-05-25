@@ -10,6 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }  // 关键：添加 JitPack
+
     }
 }
 rootProject.name = "DuBao"
