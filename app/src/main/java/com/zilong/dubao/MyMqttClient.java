@@ -67,7 +67,12 @@ public class MyMqttClient {
                 break;
                 case "ice":
                     myWebRtc.onRemoteIceCandidateReceived(msg.data);
-
+                    break;
+                case "changecam":
+                    myWebRtc.changeCam();
+                    break;
+                case "changescreen":
+                    myWebRtc.getScreenVideo();
                     break;
             default:break;
             }

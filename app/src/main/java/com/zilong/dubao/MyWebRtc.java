@@ -1,6 +1,8 @@
 package com.zilong.dubao;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.projection.MediaProjection;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -22,6 +24,8 @@ import org.webrtc.MediaStream;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.RtpReceiver;
+import org.webrtc.RtpSender;
+import org.webrtc.ScreenCapturerAndroid;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
 import org.webrtc.SurfaceTextureHelper;
@@ -131,7 +135,7 @@ public class MyWebRtc {
             }
         });
         peerConnection.addTrack(getAudioTrack());
-        peerConnection.addTrack(getVideoTrack());
+        localVideoSender =peerConnection.addTrack(getVideoTrack());
         SessionDescription offer=JSONSessionDescription(remoteSdp);
         peerConnection.setRemoteDescription(new SdpObserver() {
             @Override
@@ -172,8 +176,14 @@ public class MyWebRtc {
         audioTrack.enabled();
         return audioTrack;
     }
+    private CameraVideoCapturer mCamCapture;
+    private SurfaceTextureHelper surfaceTextureHelper;
+    private SurfaceTextureHelper surfaceTextureHelperscreen;
+
+    private RtpSender localVideoSender;
+    static Intent i;
     private VideoTrack getVideoTrack(){
-        SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", eglBase.getEglBaseContext());
+        surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", eglBase.getEglBaseContext());
         VideoCapturer videoCapturer = createCameraCapturer(true);
         VideoSource videoSource = factory.createVideoSource(videoCapturer.isScreencast());
         videoCapturer.initialize(surfaceTextureHelper, context.getApplicationContext(), videoSource.getCapturerObserver());
@@ -182,24 +192,49 @@ public class MyWebRtc {
         videoTrack.enabled();
         return videoTrack;
     }
-    private VideoCapturer createCameraCapturer(boolean isFront) {
-        Camera1Enumerator enumerator = new Camera1Enumerator(false);
-        final String[] deviceNames = enumerator.getDeviceNames();
 
-        // First, try to find front facing camera
+    public void getScreenVideo() {
+        surfaceTextureHelperscreen = SurfaceTextureHelper.create("CaptureThread1", eglBase.getEglBaseContext());
+
+        VideoCapturer screenCapturer=new ScreenCapturerAndroid(i, new MediaProjection.Callback() {
+            @Override
+            public void onStop() {
+                super.onStop();
+            }
+        }); // eglBaseContext 是你之前初始化的 EGL 上下文
+        VideoSource screenVideoSource = factory.createVideoSource(screenCapturer.isScreencast());
+        VideoTrack screenVideoTrack = factory.createVideoTrack("102", screenVideoSource);
+
+        // 2. 初始化并启动 ScreenCapturer
+        // 注意：需要提前准备好 SurfaceTextureHelper
+        screenCapturer.initialize(surfaceTextureHelperscreen, context.getApplicationContext(), screenVideoSource.getCapturerObserver());
+        screenCapturer.startCapture(/* width */ 640, /* height */ 480, /* fps */ 25);
+
+        // 3. 执行替换的关键操作
+//        localVideoSender.track().setEnabled(false);
+        localVideoSender.setTrack(screenVideoTrack, /* takeOwnership= */ true);
+    }
+
+    public void changeCam(){
+        if (mCamCapture != null) {
+            mCamCapture.switchCamera(null);
+        }
+
+    }
+    private VideoCapturer createCameraCapturer(boolean isFront) {
+        Camera2Enumerator enumerator = new Camera2Enumerator(context.getApplicationContext());
+        final String[] deviceNames = enumerator.getDeviceNames();
         for (String deviceName : deviceNames) {
             if (isFront ? enumerator.isFrontFacing(deviceName) : enumerator.isBackFacing(deviceName)) {
                 VideoCapturer videoCapturer = enumerator.createCapturer(deviceName, null);
-
+                mCamCapture = (CameraVideoCapturer) videoCapturer;
                 if (videoCapturer != null) {
                     return videoCapturer;
                 }
             }
         }
-
         return null;
     }
-
     private void createAnswer(){
         peerConnection.createAnswer(new SdpObserver() {
             @Override

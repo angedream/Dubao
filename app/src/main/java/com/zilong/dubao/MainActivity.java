@@ -1,5 +1,8 @@
 package com.zilong.dubao;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -10,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -136,7 +140,34 @@ public class MainActivity extends AppCompatActivity {
     private void startService(){
         Intent i = new Intent(this, MyService.class);
         startForegroundService(i);
+        startprojectionManager();
     }
 
+    public void startprojectionManager(){
+
+        @SuppressLint({"NewApi", "LocalSuppress"}) MediaProjectionManager projectionManager = (MediaProjectionManager)getSystemService(MEDIA_PROJECTION_SERVICE);
+        @SuppressLint({"NewApi", "LocalSuppress"}) Intent intent = projectionManager.createScreenCaptureIntent();
+//        startActivityForResult(intent,PROJECTION_REQUEST_CODE);
+
+
+        ActivityResultLauncher<Intent> screenCaptureLauncher;
+        screenCaptureLauncher=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent data = result.getData();
+                // 这里可以使用 MediaProjection API 来捕获和共享屏幕
+//                PeerConnectionUtils.i=data;
+//                PeerConnectionUtils.resultcode=result.getResultCode();
+                MyWebRtc.i=data;
+                Toast.makeText(MainActivity.this,"tongyi........",Toast.LENGTH_SHORT).show();
+
+
+            }
+            else {
+            }
+        });
+        screenCaptureLauncher.launch(intent);
+
+
+    }
 
 }
