@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DuMaActivity.class);
         startActivity(intent);
 
-        if (aa==100){
+        if (aa==1001){
             return;
         }
         initBtn();

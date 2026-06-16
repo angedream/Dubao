@@ -9,7 +9,8 @@
 
         static int dbversion=20;
         static String dbname="dubao.db";
-
+        static String dumaURL="http://office.angerdream21.top:8080";
+//        static String dumaURL="file:///android_asset/index.html";
 
 
     }
