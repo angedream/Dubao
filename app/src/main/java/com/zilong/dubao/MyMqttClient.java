@@ -60,6 +60,8 @@ public class MyMqttClient {
                 return;
 
             }
+            myWebRtc.dumaId= msg.dumaId;
+            echo.print(myWebRtc.dumaId);
             switch (msg.code){
             case "offer":
                 myWebRtc.createPeerConnection(msg.data);

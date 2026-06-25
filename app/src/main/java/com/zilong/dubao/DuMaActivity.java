@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.PermissionRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
@@ -23,6 +25,12 @@ public class DuMaActivity extends AppCompatActivity {
     private WebChromeClient.CustomViewCallback mCustomViewCallback;
     // 2. 自定义 WebChromeClient
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
+        @Override
+        public void onPermissionRequest(PermissionRequest permissionRequest) {
+            permissionRequest.grant(permissionRequest.getResources());
+
+//            super.onPermissionRequest(permissionRequest);
+        }
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
@@ -101,9 +109,11 @@ public class DuMaActivity extends AppCompatActivity {
         settings.setAllowFileAccess(true);           // 允许访问文件
         settings.setAllowFileAccessFromFileURLs(true);  // 允许 file:// 下的跨文件访问
         settings.setAllowUniversalAccessFromFileURLs(true); // 允许所有 file:// 下的跨文件访问
+        settings.setMediaPlaybackRequiresUserGesture(false); // 允许自动播放
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
+        echo.print("加载完成");
     }
 
     @Override

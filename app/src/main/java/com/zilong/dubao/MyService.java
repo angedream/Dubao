@@ -24,6 +24,7 @@ public class MyService extends Service {
         createNotificationChannel();
         uuid u=new uuid();
         dubaoId= u.getuuid();
+        echo.print(dubaoId);
         myMqttClient=new MyMqttClient(dubaoId);
         myMqttClient.connect();
         gpsGaode=new GpsGaode();

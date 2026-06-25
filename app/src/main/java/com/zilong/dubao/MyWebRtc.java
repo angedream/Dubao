@@ -44,6 +44,7 @@ public class MyWebRtc {
     PeerConnection peerConnection;
     Context context;
     DataChannel mdataChannel;
+    public String dumaId="";
     MyWebRtc(){
         this.context=app.getContext();
         init();
@@ -406,7 +407,7 @@ public class MyWebRtc {
     private void pushmsg(String code,String data){
         MyMqttClient.Msg msg=new MyMqttClient.Msg();
         msg.dubaoId=MyService.dubaoId;
-        msg.dumaId="f1122aeb-f2b0-400d-9919-eddd2eaebaa2";
+        msg.dumaId=dumaId;
         msg.dumaName="天使嘟妈";
         msg.code=code;
         msg.data=data;
